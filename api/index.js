@@ -8,7 +8,7 @@ const { logErrors, errorHandler, boomErrorHandler } = require('./middlewares/err
 const app = express();
 
 //le decimos el puerto en el que va a correr
-// 
+//
 const port = process.env.PORT || 3000;
 
 //le decimos que va a recibir json
@@ -39,20 +39,4 @@ app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
 });
 
-
-// app.get('/', (req, res) => {
-//     res.send('Hello World!');
-// });
-
-// app.get('/new-endpoint', (req, res) => {
-//   res.send('Hello I am a new endpoint!');
-// });
-
-// app.get('/categories/:categoryiId/products/:productId', (req, res) => {
-//   const { categoryiId, productId } = req.params;
-//   res.json({
-//     categoryiId,
-//     productId,
-//   });
-// });
 

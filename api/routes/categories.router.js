@@ -1,32 +1,62 @@
 const express = require('express');
-const { faker } = require('@faker-js/faker');
+const CategoryService = require('../services/category.service');
+const validateHandler = require('../middlewares/validator.handler')
+const { createCategorySchema, updateCategorySchema, getCategorySchema } = require('../schemas/category.schema');
 
 const router = express.Router();
+const service = new CategoryService();
 
-router.get('/', (req, res) => {
-  const categories = [];
-  const { size } = req.query;
-  const limit = size || 10;
-  for (let i = 0; i < limit; i++) {
-    categories.push({
-      id: faker.string.uuid(),
-      name: faker.commerce.department(),
-      image: faker.image.url(),
-    });
-  }
+router.get('/', async (req, res) => {
+  const categories = await service.find();
   res.json(categories);
 });
 
-router.get('/filter', (req, res) => {
-  res.send('Soy un filter');
+router.get('/:id',
+  validateHandler(getCategorySchema, 'params'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const category = await service.findOne(id);
+      res.json(category);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.post('/add',
+  validateHandler(createCategorySchema, 'body'),
+  async (req, res, next) => {
+    try {
+      const body = req.body;
+      const newCategory = await service.create(body);
+      res.status(201).json(newCategory);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.patch('/:id',
+  validateHandler(getCategorySchema, 'params'),
+  validateHandler(updateCategorySchema, 'body'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const body = req.body;
+      const category = await service.update(id, body);
+      res.json(category);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+  const rta = await service.delete(id);
+  res.json(rta);
 });
 
-router.get('/:id', (req, res) => {
-  const { id } = req.params.id;
-  res.json({
-    id,
-    name: 'Category 1',
-  });
-});
 
 module.exports = router;

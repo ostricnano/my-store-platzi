@@ -1,36 +1,59 @@
 const express = require('express');
-const { faker } = require('@faker-js/faker');
+const validateHandler = require('../middlewares/validator.handler');
+const UserService = require('../services/user.service');
+const { createUserSchema, updateUserSchema, getUserSchema } = require('../schemas/user.schema');
 
 const router = express.Router();
+const service = new UserService();
 
-router.get('/', (req, res) => {
-  const users = [];
-  const { size } = req.query;
-  const limit = size || 10;
-  for (let i = 0; i < limit; i++) {
-    users.push({
-      id: faker.string.uuid(),
-      name: faker.person.firstName(),
-      lastName: faker.person.lastName(),
-      email: faker.internet.email(),
-      image: faker.image.url(),
-    });
+router.get('/', async (req, res) => {
+    const users =  await service.find();
+    res.json(users);
   }
-  res.json(users);
+);
+
+router.get('/:id',
+  validateHandler(getUserSchema, 'params'),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const user = await service.findOne(id);
+      res.json(user);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.post('/add',
+  validateHandler(createUserSchema, 'body'),
+  async (req, res) => {
+    const user = req.body;
+    const newUser = await service.create(user);
+    res.status(201).json(newUser);
+  }
+);
+
+router.patch('/:id',
+  validateHandler(getUserSchema, 'params'),
+  validateHandler(updateUserSchema, 'body'),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const user = req.body;
+      const updatedUser = await service.update(id, user);
+      res.json(updatedUser);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+  await service.delete(id);
+  res.status(204).json();
 });
 
-router.get('/filter', (req, res) => {
-  res.send('Soy un filter');
-});
-
-router.get('/:id', (req, res) => {
-  const { id } = req.params.id;
-  res.json({
-    id,
-    name: 'User 1',
-    lastName: 'User 1',
-    email: ' User 1',
-  });
-});
 
 module.exports = router;

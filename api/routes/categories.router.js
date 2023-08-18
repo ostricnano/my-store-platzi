@@ -7,8 +7,12 @@ const router = express.Router();
 const service = new CategoryService();
 
 router.get('/', async (req, res) => {
-  const categories = await service.find();
-  res.json(categories);
+  try {
+    const categories = await service.find();
+    res.json(categories);
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.get('/:id',
@@ -57,6 +61,5 @@ router.delete('/:id', async (req, res) => {
   const rta = await service.delete(id);
   res.json(rta);
 });
-
 
 module.exports = router;

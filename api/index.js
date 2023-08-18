@@ -2,7 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const routerApi = require('./routes');
-const { logErrors, errorHandler, boomErrorHandler } = require('./middlewares/error.handler');
+const { logErrors, errorHandler, boomErrorHandler, ormErrorHandler } = require('./middlewares/error.handler');
 
 //creamos una instancia de express
 const app = express();
@@ -32,6 +32,7 @@ routerApi(app);
 //Los midlewares se ejecutan en el orden en el que se declaran
 //siempre se debe declarar al final de las rutas
 app.use(logErrors);
+app.use(ormErrorHandler);
 app.use(boomErrorHandler);
 app.use(errorHandler);
 

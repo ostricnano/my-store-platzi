@@ -1,3 +1,5 @@
+const { ValidationError } = require('sequelize');
+const boom = require('@hapi/boom');
 // Desc: Error handler middleware
 //       This middleware will catch all errors and send a 500 response
 function logErrors (err, req, res, next) {
@@ -25,4 +27,16 @@ function boomErrorHandler (err, req, res, next) {
     }
 }
 
-module.exports = { logErrors, errorHandler, boomErrorHandler };
+function ormErrorHandler (err, req, res, next) {
+  console.log('ormErrorHandler')
+    if (err instanceof ValidationError) {
+        res.status(409).json({
+            statusCode: 409,
+            message: err.message,
+            errors: err.errors
+        })
+      next(err)
+    }
+}
+
+module.exports = { logErrors, errorHandler, boomErrorHandler, ormErrorHandler };

@@ -18,6 +18,11 @@ const UserSchema = {
     allowNull: false,
     type: DataTypes.STRING
   },
+  recoveryToken: {
+    allowNull: true,
+    type: DataTypes.STRING,
+    field: 'recovery_token'
+  },
   role: {
     allowNull: false,
     type: DataTypes.STRING,
@@ -45,9 +50,28 @@ class User extends Model {
       sequelize,
       tableName: USER_TABLE,
       modelName: 'User',
-      timestamps: false
+      timestamps: false,
     }
   }
 }
 
 module.exports = { USER_TABLE, UserSchema, User }
+
+//configurar el hash de la contraseña
+// ahorra hacer el hass en el servicio de user y customer
+// static config(sequelize) {
+//   return {
+//     sequelize,
+//     tableName: USER_TABLE,
+//     modelName: 'User',
+//     timestamps: false,
+//     hooks: {
+//       beforeCreate: async (user, options) => {
+//         await hashPassword(user, options);
+//       },
+//       afterCreate: async (user, options) => {
+//         delete user.dataValues.password;
+//       },
+//     },
+//   };
+// };

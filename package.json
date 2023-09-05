@@ -7,10 +7,10 @@
     "dev": "nodemon api/index.js",
     "start": "node api/index.js",
     "lint": "eslint",
-    "migrations:generate":"sequelize migration:generate --name",
-    "migrations:run":"sequelize-cli db:migrate",
-    "migrations:revert":"sequelize-cli db:migrate:undo",
-    "migrations:delete":"sequelize-cli db:migrate:undo:all"
+    "migrations:generate": "sequelize migration:generate --name",
+    "migrations:run": "sequelize-cli db:migrate",
+    "migrations:revert": "sequelize-cli db:migrate:undo",
+    "migrations:delete": "sequelize-cli db:migrate:undo:all"
   },
   "keywords": [],
   "author": "",
@@ -26,14 +26,23 @@
   "dependencies": {
     "@faker-js/faker": "^8.0.2",
     "@hapi/boom": "^10.0.1",
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "faker": "^5.5.3",
     "joi": "^17.9.2",
+    "jsonwebtoken": "^9.0.1",
     "mysql2": "^3.6.0",
+    "nodemailer": "^6.9.4",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0",
     "pg": "^8.11.2",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.32.1"
+  },
+  "engines": {
+    "node": "16.16.0"
   }
 }
